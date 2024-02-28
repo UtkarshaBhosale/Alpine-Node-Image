@@ -6,6 +6,9 @@ RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
         libstdc++ \
+        openssl \
+        curl \
+        ca-certificates \
        
         && apk add --no-cache --virtual .build-deps \
         curl \
@@ -107,6 +110,8 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
+# ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
 
 CMD [ "node" ]
 
