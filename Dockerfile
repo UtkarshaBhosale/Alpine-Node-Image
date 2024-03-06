@@ -6,9 +6,7 @@ RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
         libstdc++ \
-        openssl \
-        curl \
-        ca-certificates \
+        
        
         && apk add --no-cache --virtual .build-deps \
         curl \
@@ -84,7 +82,16 @@ RUN addgroup -g 1000 node \
   && npm --version
 
 ENV YARN_VERSION 1.22.19
+        # apk add openssl \
+        # apk add curl \
+        # apk add ca-certificates \
 
+RUN apk add --no-cache \
+    openssl \
+    curl \
+    ca-certificates \
+    && update-ca-certificates
+ 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
   && export GNUPGHOME="$(mktemp -d)" \
@@ -109,6 +116,7 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && yarn --version
 
 COPY docker-entrypoint.sh /usr/local/bin/
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 # ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
